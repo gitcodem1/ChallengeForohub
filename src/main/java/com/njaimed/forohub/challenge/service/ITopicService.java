@@ -9,4 +9,8 @@ public interface ITopicService {
 
     Topic createTopic(Topic topic);
 
+    Topic updateTopic(Topic topic, Integer topicId);
+
+    void deleteTopic(Integer topicId);
+
 }

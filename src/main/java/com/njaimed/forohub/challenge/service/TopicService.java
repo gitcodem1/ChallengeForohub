@@ -7,6 +7,7 @@ import com.njaimed.forohub.challenge.repository.converter.TopicModelToEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +24,30 @@ public class TopicService implements ITopicService {
                 .collect(Collectors.toList());
     }
 
-  @Override
-  public Topic createTopic(Topic topic) {
-    return TopicEntityToModel.convert(
-            topicRepository.save(TopicModelToEntity.convert(topic)));
+    @Override
+    public Topic createTopic(Topic topic) {
+        return TopicEntityToModel.convert(
+                topicRepository.save(TopicModelToEntity.convert(topic)));
 
-  }
+    }
+
+    @Override
+    public Topic updateTopic(Topic newTopic, Integer topicId) {
+        return topicRepository.findById(topicId)
+                .map(topic -> {
+                    topic.setTitle(newTopic.getTitle());
+                    topic.setMessage(newTopic.getMessage());
+                    topic.setUpdatedAt(LocalDateTime.now());
+                    return topic;
+                })
+                .map(topicRepository::save)
+                .map(TopicEntityToModel::convert)
+                .orElseThrow(() -> new RuntimeException("*Topico no encontrado*"));
+
+    }
+
+    @Override
+    public void deleteTopic(Integer topicId) {
+        topicRepository.deleteById(topicId);
+    }
 }

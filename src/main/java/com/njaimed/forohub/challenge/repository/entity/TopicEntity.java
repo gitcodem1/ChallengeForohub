@@ -28,8 +28,6 @@ public class TopicEntity {
 
     private String title;
 
-    private String language;
-
     private String message;
 
     private LocalDateTime createdAt;
