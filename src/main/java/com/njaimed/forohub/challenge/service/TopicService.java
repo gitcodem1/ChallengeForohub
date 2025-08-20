@@ -1,15 +1,15 @@
 package com.njaimed.forohub.challenge.service;
 
+import com.njaimed.forohub.challenge.controller.response.PaginatedResponse;
 import com.njaimed.forohub.challenge.model.Topic;
 import com.njaimed.forohub.challenge.repository.TopicRepository;
 import com.njaimed.forohub.challenge.repository.converter.TopicEntityToModel;
 import com.njaimed.forohub.challenge.repository.converter.TopicModelToEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -18,10 +18,8 @@ public class TopicService implements ITopicService {
     private final TopicRepository topicRepository;
 
     @Override
-    public List<Topic> getTopics() {
-        return topicRepository.findAll().stream()
-                .map(TopicEntityToModel::convert)
-                .collect(Collectors.toList());
+    public PaginatedResponse getTopics(Pageable pageable) {
+        return TopicEntityToModel.convertWithPage(topicRepository.findAll(pageable));
     }
 
     @Override
